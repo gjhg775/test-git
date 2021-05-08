@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-python:3.7-alpine
+FROM python:3.7-alpine
 # FROM python:3.9.2
 WORKDIR /app
 ENV FLASK_APP=app.py
