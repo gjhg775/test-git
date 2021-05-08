@@ -8,5 +8,5 @@ services:
       - .:/app
     environment:
       FLASK_ENV: development
-  redis:
-    image: "redis:alpine"
+#   redis:
+#     image: "redis:alpine"
