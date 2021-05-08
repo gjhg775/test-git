@@ -1,13 +1,34 @@
+import time
+import redis
 from flask import Flask, render_template, request, redirect, url_for
 
 
 app = Flask(__name__)
+cache = redis.Redis(host='redis', port=6379)
 
+def get_hit_count():
+    retries = 5
+    while True:
+        try:
+            return cache.incr('hits')
+        except redis.exceptions.ConnectionError as exc:
+            if retries == 0:
+                raise exc
+            retries -= 1
+            time.sleep(0.5)
 
 @app.route('/')
-def index():
-    return render_template('index.html', title='Prueba Git')
+def hello():
+    count = get_hit_count()
+    # return 'Hello World! I have been seen {} times.\n'.format(count)
+    visits = 'Hello World! I have been seen {} times.\n'.format(count)
+    return render_template('index.html', title='Prueba Git', visits=visits)
+
+
+# @app.route('/')
+# def index():
+#     return render_template('index.html', title='Prueba Git')
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
